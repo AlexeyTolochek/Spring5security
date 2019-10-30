@@ -13,11 +13,14 @@ import ru.java.mentor.service.UserService;
 @Controller
 public class RegistrationController {
 
-    @Autowired
     private UserService service;
+    private Environment environment;
 
     @Autowired
-    private Environment environment;
+    public RegistrationController(UserService service, Environment environment) {
+        this.service = service;
+        this.environment = environment;
+    }
 
     @GetMapping("/reg")
     public String reg(@ModelAttribute("message") String message) {

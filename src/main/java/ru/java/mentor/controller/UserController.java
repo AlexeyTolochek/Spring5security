@@ -11,8 +11,12 @@ import java.security.Principal;
 @Controller
 public class UserController {
 
-    @Autowired
     private UserService service;
+
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping("/user")
     public String hello(Principal principal, Model model){

@@ -15,11 +15,14 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    @Autowired
     private UserService service;
+    private Environment environment;
 
     @Autowired
-    private Environment environment;
+    public AdminController(UserService service, Environment environment) {
+        this.service = service;
+        this.environment = environment;
+    }
 
     @GetMapping("/admin")
     public String userList(@ModelAttribute("edit") String edit, @ModelAttribute("user") User user,

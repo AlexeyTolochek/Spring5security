@@ -9,7 +9,7 @@ import ru.java.mentor.model.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 
-    @Query("from Role where role=:role")
+    //@Query("from Role where role=:role")
     Role findByRole(@Param("role") String role);
 
     Role findById(int id);
