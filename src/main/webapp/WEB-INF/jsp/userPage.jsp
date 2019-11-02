@@ -11,7 +11,7 @@
 <div class="header">
     <h1>Java Mentor!</h1>
 
-    <h2>x -> Приветствие на супер-мега сайте супер-пупер юзверя  ${byLogin.name}</h2><br/>
+    <h2>x -> Приветствие на супер-мега сайте супер-пупер юзверя  ${user.name}</h2><br/>
 
     <h2>${requestScope.message}</h2>
     <div>Site<span>Random</span></div>

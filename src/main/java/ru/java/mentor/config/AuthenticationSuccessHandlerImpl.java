@@ -1,9 +1,9 @@
 package ru.java.mentor.config;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import ru.java.mentor.model.User;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,12 +16,9 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
                                         Authentication authentication) throws IOException {
 
         HttpSession session = request.getSession();
-        User user = (User) SecurityContextHolder
-                                        .getContext()
-                                        .getAuthentication()
-                                        .getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
-        session.setAttribute("username", user.getLogin());
+        session.setAttribute("user", user);
         session.setAttribute("authorities", authentication.getAuthorities());
 
         response.setStatus(HttpServletResponse.SC_OK);

@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.java.mentor.service.UserDetailsServiceImpl;
 
 @Configuration
@@ -39,22 +41,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+
         httpSecurity
+                .addFilterBefore(filter, CsrfFilter.class)
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/reg", "/reg/**").permitAll()
-                .antMatchers("/admin", "/admin/**").hasAuthority("ADMIN").anyRequest()
-                    .authenticated()
-                .and()
-                    .formLogin()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/reg", "/reg/**").permitAll()
+                    .antMatchers("/admin", "/admin/**").hasAuthority("ADMIN")
+                    .anyRequest().authenticated()
+                    .and()
+                .formLogin()
                     .loginPage("/")
                     .loginProcessingUrl("/")
                     .failureUrl("/?error=true")
-                .successHandler(myAuthenticationSuccessHandler())
-                .usernameParameter("name")
-                .passwordParameter("password")
-                .and()
-                    .exceptionHandling()
+                    .usernameParameter("name")
+                    .passwordParameter("password")
+                    .successHandler(myAuthenticationSuccessHandler())
+                    .and()
+                .exceptionHandling()
                     .accessDeniedPage("/access_denied");
     }
 

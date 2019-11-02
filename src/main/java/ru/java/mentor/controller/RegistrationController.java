@@ -29,7 +29,6 @@ public class RegistrationController {
 
     @PostMapping("/reg/user")
     public String regUser(@ModelAttribute("user") User user, Model model) {
-        System.out.println("start");
         if (service.addUser(user)) {
             return "redirect:/";
         } else {

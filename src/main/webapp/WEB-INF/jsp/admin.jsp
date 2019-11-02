@@ -38,7 +38,7 @@
         </tr>
         <tr>
             <td align='right'>Доступ</td>
-            <td><input type='text' name='role' maxlength='50' size='20' value=${userEdit.role}></td>
+            <td><input type='text' name='role' maxlength='50' size='20' value=${userEdit.roles}></td>
         </tr>
     </table>
     <p><b>Выберите действие c пользователем</b></p>
@@ -70,7 +70,7 @@
             <td> ${user.login} </td>
             <td> ${user.password} </td>
             <td> ${user.address} </td>
-            <td> ${user.role.toString().replaceAll("^\\[|\\]$", "")} </td>
+            <td> ${user.roles.toString().replaceAll("^\\[|\\]$", "")} </td>
             <td>
                 <form:form method="get">
                     <input type="submit" value="Изменить" name="edit">

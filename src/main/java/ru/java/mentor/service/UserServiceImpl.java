@@ -45,7 +45,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addUser(User user) {
         if (notNullDataUser(user) && !isExistLogin(user.getUsername())) {
-            initRoleAndEncode(user, null);
+            addUserRole(user);
+            user.setPassword(
+                    bCryptPasswordEncoder.encode(
+                            user.getPassword()));
             userRepository.saveAndFlush(user);
             return true;
         }
@@ -55,7 +58,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addUserAdmin(User user, String access) {
         if (notNullDataUser(user) && !isExistLogin(user.getUsername())) {
-            initRoleAndEncode(user, access);
+            initRole(user, access);
+            passwordEncode(user);
             userRepository.saveAndFlush(user);
         }
         return false;
@@ -64,7 +68,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(User user, String access) {
         if (notNullDataUser(user)) {
-            initRoleAndEncode(user, access);
+            initRole(user, access);
+            passwordEncode(user);
             userRepository.save(user);
             return true;
         }
@@ -126,26 +131,34 @@ public class UserServiceImpl implements UserService {
         return editUser;
     }
 
-    private void initRoleAndEncode(User user, String access){
+    private void addUserRole(User user) {
+
         if (userRole==null) {
             userRole = roleRepository.findById(2);
+        }
+
+        user.getRoles().add(userRole);
+    }
+
+    private void addAdminRole(User user) {
+
+        if (adminRole==null) {
             adminRole = roleRepository.findById(1);
         }
 
-        if (access==null || access.isEmpty() || access.contains("User")) {
-            user.getRole().add(userRole);
-        } else if (access.contains("Admin")) {
-            user.getRole().add(adminRole);
+        user.getRoles().add(adminRole);
+    }
+
+    private void initRole(User user, String access) {
+
+        if (access.contains("Admin")) {
+            addAdminRole(user);
         } else {
-            roleRepository.save(new Role(0, access));
-            Role role = roleRepository.findByRole(access);
-            user.getRole().add(role);
+          addUserRole(user);
         }
+    }
 
-        if (user.getId()==null) {
-            user.setId(0);
-        }
-
+    private void passwordEncode(User user) {
         if (user.getPassword().length()<30) {
             String pass = user.getPassword();
             user.setPassword(

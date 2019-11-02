@@ -4,7 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,9 +30,7 @@ public class User implements UserDetails {
     private String address;
 
     @ManyToMany(
-            //targetEntity = Role.class,
-            fetch = FetchType.EAGER
-            //cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+            fetch = FetchType.LAZY
     )
     @JoinTable(name = "has",
             joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
@@ -117,7 +118,7 @@ public class User implements UserDetails {
         this.address = address;
     }
 
-    public Set<Role> getRole() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
